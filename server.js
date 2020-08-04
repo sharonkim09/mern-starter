@@ -6,15 +6,29 @@ const app = express();
 // server port
 const PORT = process.env.PORT || 3001;
 
+
+const path=require("path")
+
 // middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// last bit to get working
+app.use(express.static("client/build"));
+
 
 app.get("/api/config", (req, res) => {
   res.json({
     success: true,
   });
 });
+
+// if route doesn't match server up react
+// send path to html
+app.get("*",(req,res)=>{
+  res.sendFile(path.join(__dirname,"./client/build/index.html"))
+})
+
 // db connection
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost/mern-starter", {
